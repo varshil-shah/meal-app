@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:meal_app/models/meal.dart';
+import 'package:meal_app/screens/meal_detail.dart';
 
 class MealItem extends StatelessWidget {
+  final String id;
   final String title;
   final String imageUrl;
   final int duration;
@@ -10,6 +12,7 @@ class MealItem extends StatelessWidget {
 
   const MealItem({
     Key? key,
+    required this.id,
     required this.title,
     required this.imageUrl,
     required this.duration,
@@ -17,7 +20,12 @@ class MealItem extends StatelessWidget {
     required this.affordability,
   }) : super(key: key);
 
-  void selectedMeal() {}
+  void selectedMeal(BuildContext ctx) {
+    Navigator.of(ctx).pushNamed(
+      MealDetail.routeName,
+      arguments: id,
+    );
+  }
 
   String get complexityText {
     switch (complexity) {
@@ -48,7 +56,7 @@ class MealItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: selectedMeal,
+      onTap: () => selectedMeal(context),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
@@ -102,32 +110,26 @@ class MealItem extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        const Icon(Icons.schedule),
-                        const SizedBox(width: 6),
-                        Text("$duration mins")
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      const Icon(Icons.schedule),
+                      const SizedBox(width: 6),
+                      Text("$duration mins")
+                    ],
                   ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        const Icon(Icons.work),
-                        const SizedBox(width: 6),
-                        Text(complexityText)
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      const Icon(Icons.work),
+                      const SizedBox(width: 6),
+                      Text(complexityText)
+                    ],
                   ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        const Icon(Icons.attach_money),
-                        const SizedBox(width: 6),
-                        Text(affordabilityText)
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      const Icon(Icons.attach_money),
+                      const SizedBox(width: 6),
+                      Text(affordabilityText)
+                    ],
                   ),
                 ],
               ),
