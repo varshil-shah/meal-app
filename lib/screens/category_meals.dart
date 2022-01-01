@@ -5,9 +5,11 @@ import 'package:meal_app/widgets/meal_item.dart';
 
 class CategoryMeals extends StatefulWidget {
   static const routeName = "/category-meals";
+  final List<Meal> availableMeals;
 
   const CategoryMeals({
     Key? key,
+    required this.availableMeals,
   }) : super(key: key);
 
   @override
@@ -28,7 +30,7 @@ class _CategoryMealsState extends State<CategoryMeals> {
           ModalRoute.of(context)?.settings.arguments as Map<String, String>;
       categoryTitle = routeArgs["title"] as String;
       final String categoryId = routeArgs["id"] as String;
-      displayedMeals = DUMMY_MEALS
+      displayedMeals = widget.availableMeals
           .where((meal) => meal.categories.contains(categoryId))
           .toList();
       _loadedInitData = true;
