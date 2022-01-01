@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/screens/fliters.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({Key? key}) : super(key: key);
@@ -38,8 +39,12 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20.0),
-          _buildListTile(Icons.restaurant, "Meals", () {}),
-          _buildListTile(Icons.settings, "Settings", () {}),
+          _buildListTile(Icons.restaurant, "Meals", () {
+            Navigator.of(context).pushNamed("/");
+          }),
+          _buildListTile(Icons.settings, "Settings", () {
+            Navigator.of(context).pushNamed(Filter.routeName);
+          }),
         ],
       ),
     );
