@@ -5,13 +5,22 @@ import 'package:meal_app/widgets/background.dart';
 
 class MealDetail extends StatelessWidget {
   static const String routeName = "/meal-detail";
+
+  final Function(String mealId) toggleFavourite;
+  final Function(String mealId) isFavouriteMeal;
+
   final availableColors = [
     Colors.red,
     Colors.blue,
     Colors.green,
     Colors.pink,
   ];
-  MealDetail({Key? key}) : super(key: key);
+
+  MealDetail({
+    Key? key,
+    required this.toggleFavourite,
+    required this.isFavouriteMeal,
+  }) : super(key: key);
 
   Container _buildSectionTitle(String title) {
     return Container(
@@ -116,10 +125,8 @@ class MealDetail extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pop(mealId);
-        },
-        child: const Icon(Icons.delete),
+        onPressed: () => toggleFavourite(mealId),
+        child: Icon(isFavouriteMeal(mealId) ? Icons.star : Icons.star_outline),
       ),
     );
   }

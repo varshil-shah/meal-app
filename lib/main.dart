@@ -26,12 +26,13 @@ class _MyAppState extends State<MyApp> {
     "vegetarian": false,
   };
 
-  List<Meal> _availableMeal = DUMMY_MEALS;
+  List<Meal> _availableMeals = DUMMY_MEALS;
+  List<Meal> _favouriteMeals = [];
 
   void _setFilters(Map<String, bool> filteredData) {
     setState(() {
       _filters = filteredData;
-      _availableMeal = DUMMY_MEALS.where((meal) {
+      _availableMeals = DUMMY_MEALS.where((meal) {
         if (_filters['gluten'] as bool && !meal.isGlutenFree) return false;
         if (_filters['lactose'] as bool && !meal.isLactoseFree) return false;
         if (_filters['vegan'] as bool && !meal.isVegan) return false;
@@ -41,10 +42,29 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _toggleFavourite(String mealId) {
+    final existingMealIndex =
+        _favouriteMeals.indexWhere((meal) => meal.id == mealId);
+    if (existingMealIndex >= 0) {
+      setState(() {
+        _favouriteMeals.removeAt(existingMealIndex);
+      });
+    } else {
+      setState(() {
+        _favouriteMeals
+            .add(DUMMY_MEALS.firstWhere((meal) => meal.id == mealId));
+      });
+    }
+  }
+
+  bool _isFavouriteMeal(String mealId) {
+    return _favouriteMeals.any((meal) => meal.id == mealId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'DeliMeal',
+      title: 'Recipe Junction',
       theme: ThemeData(
         primarySwatch: Colors.pink,
         textTheme: ThemeData.light().textTheme.copyWith(
@@ -63,11 +83,16 @@ class _MyAppState extends State<MyApp> {
             ),
       ),
       routes: {
-        "/": (ctx) => const TabsScreen(),
-        CategoryMeals.routeName: (ctx) => CategoryMeals(
-              availableMeals: _availableMeal,
+        "/": (ctx) => TabsScreen(
+              favouriteMeals: _favouriteMeals,
             ),
-        MealDetail.routeName: (ctx) => MealDetail(),
+        CategoryMeals.routeName: (ctx) => CategoryMeals(
+              availableMeals: _availableMeals,
+            ),
+        MealDetail.routeName: (ctx) => MealDetail(
+              toggleFavourite: _toggleFavourite,
+              isFavouriteMeal: _isFavouriteMeal,
+            ),
         Filter.routeName: (ctx) => Filter(
               saveFilters: _setFilters,
               currentFilters: _filters,
