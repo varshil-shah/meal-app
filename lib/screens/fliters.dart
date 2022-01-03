@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/models/filters.dart';
 import 'package:meal_app/widgets/background.dart';
 import 'package:meal_app/widgets/drawer.dart';
 
 class Filter extends StatefulWidget {
   static const routeName = "/filters";
   final Function saveFilters;
-  final Map<String, bool> currentFilters;
+  final FilterData currentFilters;
 
   const Filter(
       {Key? key, required this.saveFilters, required this.currentFilters})
@@ -23,10 +24,10 @@ class _FilterState extends State<Filter> {
 
   @override
   void initState() {
-    _isGultenFree = widget.currentFilters['gluten'] as bool;
-    _isLactoseFree = widget.currentFilters['lactose'] as bool;
-    _isVegan = widget.currentFilters['vegan'] as bool;
-    _isVegetarain = widget.currentFilters['vegetarian'] as bool;
+    _isGultenFree = widget.currentFilters.isGlutenFree;
+    _isLactoseFree = widget.currentFilters.isLactoseFree;
+    _isVegan = widget.currentFilters.isVegan;
+    _isVegetarain = widget.currentFilters.isVegetarian;
     super.initState();
   }
 
@@ -63,12 +64,11 @@ class _FilterState extends State<Filter> {
         actions: [
           IconButton(
             onPressed: () {
-              final selectedFilters = {
-                "gluten": _isGultenFree,
-                "lactose": _isLactoseFree,
-                "vegan": _isVegan,
-                "vegetarian": _isVegetarain,
-              };
+              final selectedFilters = FilterData(
+                  isGlutenFree: _isGultenFree,
+                  isLactoseFree: _isLactoseFree,
+                  isVegetarian: _isVegetarain,
+                  isVegan: _isVegan);
               widget.saveFilters(selectedFilters);
             },
             icon: const Icon(Icons.save),

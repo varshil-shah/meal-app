@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meal_app/dummy_data.dart';
+import 'package:meal_app/models/filters.dart';
 import 'package:meal_app/models/meal.dart';
 import 'package:meal_app/screens/categories.dart';
 import 'package:meal_app/screens/category_meals.dart';
@@ -19,24 +20,24 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Map<String, bool> _filters = {
-    "gluten": false,
-    "lactose": false,
-    "vegan": false,
-    "vegetarian": false,
-  };
+  FilterData _filtersData = FilterData(
+    isGlutenFree: false,
+    isLactoseFree: false,
+    isVegetarian: false,
+    isVegan: false,
+  );
 
   List<Meal> _availableMeals = DUMMY_MEALS;
-  List<Meal> _favouriteMeals = [];
+  final List<Meal> _favouriteMeals = [];
 
-  void _setFilters(Map<String, bool> filteredData) {
+  void _setFilters(FilterData filteredData) {
     setState(() {
-      _filters = filteredData;
+      _filtersData = filteredData;
       _availableMeals = DUMMY_MEALS.where((meal) {
-        if (_filters['gluten'] as bool && !meal.isGlutenFree) return false;
-        if (_filters['lactose'] as bool && !meal.isLactoseFree) return false;
-        if (_filters['vegan'] as bool && !meal.isVegan) return false;
-        if (_filters['vegetarian'] as bool && !meal.isVegetarian) return false;
+        if (_filtersData.isGlutenFree && !meal.isGlutenFree) return false;
+        if (_filtersData.isLactoseFree && !meal.isLactoseFree) return false;
+        if (_filtersData.isVegan && !meal.isVegan) return false;
+        if (_filtersData.isVegetarian && !meal.isVegetarian) return false;
         return true;
       }).toList();
     });
@@ -95,7 +96,7 @@ class _MyAppState extends State<MyApp> {
             ),
         Filter.routeName: (ctx) => Filter(
               saveFilters: _setFilters,
-              currentFilters: _filters,
+              currentFilters: _filtersData,
             ),
       },
       onUnknownRoute: (settings) {
